@@ -9,15 +9,9 @@
 #include <stdio.h>
 #include <string.h>
 
-void Task1Cipher(char text, int key)
-    
-
 int main(void) {
     int key=1;
     char text[1024] ="text";
     
-    
-    printf("The ciphered text is :%s ", text);
+    printf("The cipher input text is : %s\n", text);
 }
-}
-
