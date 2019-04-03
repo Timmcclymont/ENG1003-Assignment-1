@@ -14,3 +14,4 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 // This is hopefully the first successful git commit... But probably not......
+// Testing the git commitment process before I get in too deep..
