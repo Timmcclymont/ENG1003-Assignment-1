@@ -7,10 +7,17 @@
 //
 
 #include <stdio.h>
+#include <string.h>
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    printf("Hello, World!\n");
-    return 0;
+void Task1Cipher(char text, int key)
+    
+
+int main(void) {
+    int key=1;
+    char text[1024] ="text";
+    
+    
+    printf("The ciphered text is :%s ", text);
 }
-//This is the first git commitment.
+}
+
