@@ -66,7 +66,7 @@ void substitution(void) {
 
     // Loop through plaintext message
     for(int i=0; i<strlen(text); i++){
-      // Finding what letter
+      // Finding what letters
       for(int j=0; j<26; j++){
         if(text[i] == alphabet[j] ){
           //Replace letter with matching encryption key character
@@ -219,44 +219,41 @@ void crackSubstitution(void){
 
   // Assume ideal freq. distribution
   const char letterDistIdeal[26] = {'E','T','A','O','I','N','S','H','R','D','L','C','U','M','W','F','G','Y','P','B','V','K','J','X','Q','Z'};
-  // Now perform substitution decryption
+  // Now perform substitution decryption exactly the same as the substitution decryption function detailed above
   // Loop through encrypted message
-  for(int i=0; i<strlen(text); i++){
+  for(int i=0; i<strlen(text); i++){ //for loop to loop through the entire encrypted message character by character and replace each with the corresponding ideal freq letter
     // Finding what letter
     for(int j=0; j<lenSeen; j++){
       if(text[i] == seen[j] ){
         //Replace letter with matching alphabet character
-        text[i] = letterDistIdeal[j];
-        break;
+        text[i] = letterDistIdeal[j]; //for the i'th and j'th indexed letters replace text with its corresponding indexed 'ideal frequncy letter E, T, A, O...'
+        break; //break out of the for loop after i (counter) becomes greater that the string length of 'text'
       }
     }
   }
-  printf("Decrypted text: \n%s\n", text);
+  printf("Decrypted text: \n%s\n", text); //prints the decrypted text stored on the 'text' variable to the console
 
 
 }
 
-// Return 0 if argument string is found in a dictionary file, else return 1
-int dictionaryLookup(char *word){
-  // Open the dictionary file
+
+int dictionaryLookup(char *word){ // Return 0 if argument string is found in a dictionary file, else return 1
+
   FILE *dictFile;
-  dictFile = fopen(DICTIONARY,"r");
-  char dictWord[30];  // A temporary holder for a dictionary word
-  int test = 0;       // Holds the returned status of fscanf
-  // printf("Checking %s ... ", word);
+  dictFile = fopen(DICTIONARY,"r"); //open defined DICTIONARY into file: dictFile as read only
+  char dictWord[30];  // A temporary holder for an individual dictionary word
+  int test = 0;       // Holds the returned status of fscanf 1 or 0 depending on a match being found
   // Compare a string against every entry in the dictionary
   while(test != EOF){
     test = fscanf(dictFile,"%s",dictWord); //get a word from the dictionary, store in dictWord array
     //if decrypted word matches a word in the dictionary, increment that key's score
-    if (strcasecmp(word,dictWord) == 0) { // strcasecmp (UNIX systems) ignores case
-      // if (strcicmp(word,dictWord) == 0) { // an attempt at a portable scring-compare that ignores case
-      fclose(dictFile);
-      // printf("Found %s\n", dictWord);
+    if (strcasecmp(word,dictWord) == 0) { // strcasecmp (UNIX systems) ignores case this is not a portable libray so will likely return errors on other OS'
+
+      fclose(dictFile); //closes dictFile
       return 0; // match found
     }
   }
-  fclose(dictFile);
-  // printf("No match found in dictionary\n");
+  fclose(dictFile); //closes dictFile
   return 1; // No match found
 }
 
@@ -268,15 +265,15 @@ void crackRotation(void) {
   int scores[26];
   for(int i = 0; i < 26; i++) { //sets each array value to 0
     scores[i]=0;
-  } // Array to hold number of real words found for each dectyption key. Initialise with zeros.
+  } // Array to hold number of real words found for each decryption key. Initialise with zeros.
 
-  // Prompt for cihpertext to decrypt. Store in array.
+  // Prompt for cihpertext to decrypt from the user. Store in array 'text'.
   printf("Enter cipher to crack: ");
   scanf(" %[^\n]s" , text);
 
   // Loop through all possible keys and count number of dictionary words found for each key
   for(int encryptionKey = 0; encryptionKey < 25; encryptionKey++) {
-    // Step 1: Perform decryption with current key (offset)
+    // Step 1: Perform decryption with current key (offset) same as the function used in rotation cipher
     for(int i = 0; text[i] != '\0'; i++){
       character = text[i];
 
@@ -344,24 +341,24 @@ int main() {
     scanf(" %d" ,&state);
 
     // The state-machine: jump to the user-selected cipher algorithm
-    switch(state) {
+    switch(state) { //simple switch case function with 4 potential options 1-4 and a default returning an error message
       case STATE_CAESAR:
-      caesar();
+      caesar(); //jump to the caesar cipher function
       break;
 
       case STATE_SUBST:
-      substitution();
+      substitution(); //jump to the substitution cipher function
       break;
 
       case STATE_CRACK_SUBST:
-      crackSubstitution();
+      crackSubstitution(); //jump to the crack substitution function
       break;
 
       case STATE_CRACK_CAESAR:
-      crackRotation();
+      crackRotation(); //jump to the rotation cipher function
       break;
 
-      default: printf("Incorrect input, enter a number 1 - 4 to select a mode");
+      default: printf("Incorrect input, enter a number 1 - 4 to select a mode"); //if no valid option is entered by the user this default statement prompts the user
 
     }
 
