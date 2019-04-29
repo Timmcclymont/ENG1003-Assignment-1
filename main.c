@@ -178,11 +178,14 @@ void crackSubstitution(void){
   int freqs[26]; // Frequencies of occurance
   for (int i=0; i < 26; i++) {freqs[i] = 0;} // Initialise array of zeros
   char seen[26];
-  char text[2048] = SUB1;
+  char text[2048];
   int lenSeen = 0;
   int len = strlen(text);
 
-  // Step throught encrypted text and accumulate unlabelled frequencies
+  printf("Enter cipher to crack: "); //Prompt the user for cipher text input
+  scanf(" %[^\n]s" , text);   //store the users cipher text input on char variable 'text'
+
+  // Step through encrypted text and accumulate unlabelled frequencies
 
   // Step through every letter in the text
   for (int i = 0; i < len; i++) {
@@ -205,14 +208,6 @@ void crackSubstitution(void){
 
   }
 
-  for (int i = 0; i < lenSeen; i++) {
-    printf("  %c ", seen[i]);
-  }
-  printf("\n");
-  for (int i = 0; i < lenSeen; i++) {
-    printf(" %4d ", freqs[i]);
-  }
-
   // Now, we have an array of unique, seen letters (seen), and a corresponding array of occurences (freqs)
   // Sort the array of occurences in descending order, and mirror that sorting in the array of letters
   int i, j;
@@ -224,16 +219,6 @@ void crackSubstitution(void){
       swapChar(&seen[j], &seen[j+1]);
     }
   }
-
-  printf("\n");
-  for(int i = 0; i < lenSeen; i++) {
-    printf("%c",seen[i]);
-  }
-  for(int i = 0; i < lenSeen; i++) {
-    printf(" %d ",freqs[i]);
-  }
-
-
 
   // Assume ideal freq. distribution
   const char letterDistIdeal[26] = {'E','T','A','O','I','N','S','H','R','D','L','C','U','M','W','F','G','Y','P','B','V','K','J','X','Q','Z'};
@@ -249,7 +234,7 @@ void crackSubstitution(void){
       }
     }
   }
-  printf("Decrypted text: \n%s\n", text);
+  printf("Encrypted text: \n%s\n", text);
 
 
 }
