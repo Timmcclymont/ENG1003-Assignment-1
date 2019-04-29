@@ -161,39 +161,39 @@ void substitution(void) {
 
     // Loop through plaintext message
     for(int i=0; i<strlen(text); i++){ //loops using the function strlen (string length) which is the number of characters in variable 'text'
-      for(int j=0; j<26; j++){ //for the length of characters in the alphabet (26) continue to loop so long as j !<26
-        if(text[i] == alphabet[j] ){
-          //Replace letter with its corresponding encryption key character of index j
-          text[i] = encryptionKey[j];
-          break;
-        }
+    for(int j=0; j<26; j++){ //for the length of characters in the alphabet (26) continue to loop so long as j !<26
+      if(text[i] == alphabet[j] ){
+        //Replace letter with its corresponding encryption key character of index j
+        text[i] = encryptionKey[j];
+        break;
       }
     }
-    printf("Encrypted text: \n%s\n", text); //print the encrypted text to the console for the user
-
-  } else if (mode == decrypt){ //if user selected mode = constant variable decrypt (1) perform this function
-    // Decryption Code
-    printf("Enter encrypted message: ");
-    scanf(" %[^\n]s" ,text);
-    printf("Enter 26 character encryption key: ");
-    scanf(" %s", encryptionKey);
-
-    // Loop through encrypted message
-    for(int i=0; i<strlen(text); i++){
-      // Finding what letter
-      for(int j=0; j<26; j++){
-        if(text[i] == encryptionKey[j] ){
-          //Replace letter with matching alphabet character
-          text[i] = alphabet[j]; //constant global variable 'alphabet' is used here, so each letter of encrypted text indexed correclty with the encryption key gets replaced with its corresponding j'th alphabet character
-          break;
-        }
-      }
-    }
-    printf("Decrypted text: \n%s\n", text); //print the newly decrypted text to the console for the user
-
-  } else {
-    printf("Invalid selection\n"); //notify the user that an incorrect substitution cipher mode has been entered
   }
+  printf("Encrypted text: \n%s\n", text); //print the encrypted text to the console for the user
+
+} else if (mode == decrypt){ //if user selected mode = constant variable decrypt (1) perform this function
+  // Decryption Code
+  printf("Enter encrypted message: ");
+  scanf(" %[^\n]s" ,text);
+  printf("Enter 26 character encryption key: ");
+  scanf(" %s", encryptionKey);
+
+  // Loop through encrypted message
+  for(int i=0; i<strlen(text); i++){
+    // Finding what letter
+    for(int j=0; j<26; j++){
+      if(text[i] == encryptionKey[j] ){
+        //Replace letter with matching alphabet character
+        text[i] = alphabet[j]; //constant global variable 'alphabet' is used here, so each letter of encrypted text indexed correclty with the encryption key gets replaced with its corresponding j'th alphabet character
+        break;
+      }
+    }
+  }
+  printf("Decrypted text: \n%s\n", text); //print the newly decrypted text to the console for the user
+
+} else {
+  printf("Invalid selection\n"); //notify the user that an incorrect substitution cipher mode has been entered
+}
 }
 
 //– What are the inputs? - User plaintext capitals only (lowercase passed through) only
