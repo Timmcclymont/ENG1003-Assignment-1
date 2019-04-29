@@ -103,12 +103,12 @@ void substitution(void) {
 }
 
 void caesar(void){
-  const int encrypt = 0;
+  const int encrypt = 0; //declare two constant variables encrypt (0) and decrypt (1) these are usec for function selection in the menu system
   const int decrypt = 1;
-  int mode;
+  int mode; //declare a single integer mode for the storage of user input for menu selection
 
-  char text[1024], character;
-  char encryptionKey[26];
+  //char text[1024], character; //two char variables 'character' and 'text' of length 1024 (arbitrary array length for storage of user encrypt/decrypt text)
+  //char encryptionKey[26]; //encryption key array of length 26 for
 
   // Select encrypt/decrypt
   printf("\nEnter Selection:\n            Encrypt: 0\n            Decrypt: 1\n ");
@@ -210,15 +210,15 @@ void crackSubstitution(void){
   int i, j;
   for (i = 0; i < lenSeen-1; i++){
     // Last i elements are already in place
-    for (j = 0; j < lenSeen-i-1; j++)
+    for (j = 0; j < lenSeen-i-1; j++) //sort the the array of occurences in descending order
     if (freqs[j] < freqs[j+1]) {
       swapInt(&freqs[j], &freqs[j+1]);
-      swapChar(&seen[j], &seen[j+1]);
+      swapChar(&seen[j], &seen[j+1]); //mirror the frequency array in the seen letter array
     }
   }
 
-  // Assume ideal freq. distribution
-  const char letterDistIdeal[26] = {'E','T','A','O','I','N','S','H','R','D','L','C','U','M','W','F','G','Y','P','B','V','K','J','X','Q','Z'};
+  // Assume ideal freq. distribution of english letters
+  const char letterDistIdeal[26] = {'E','T','A','O','I','N','S','R','D','H','L','U','C','M','W','F','Y','G','P','B','V','K','X','Q','J','Z'};
   // Now perform substitution decryption exactly the same as the substitution decryption function detailed above
   // Loop through encrypted message
   for(int i=0; i<strlen(text); i++){ //for loop to loop through the entire encrypted message character by character and replace each with the corresponding ideal freq letter
