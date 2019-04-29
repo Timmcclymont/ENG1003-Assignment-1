@@ -11,6 +11,7 @@
 // File Paths
 #define DICTIONARY "dictionary.txt"
 
+//SUB1 is the first canned substition text from blackboard. It is defined here as SUB1 for easy use later in the substition cracker function
 #define SUB1 "RCR VYE BGBX HBNX FHB FXNQBRV YM RNXFH IZNQEBCJ FHB PCJB? C FHYEQHF KYF. CF'J KYF N JFYXV FHB DBRC PYEZR FBZZ VYE. CF'J N JCFH ZBQBKR. RNXFH IZNQEBCJ PNJ N RNXA ZYXR YM FHB JCFH, JY IYPBXMEZ NKR JY PCJB HB LYEZR EJB FHB MYXLB FY CKMZEBKLB FHB OCRCLHZYXCNKJ FY LXBNFB ZCMB… HB HNR JELH N AKYPZBRQB YM FHB RNXA JCRB FHNF HB LYEZR BGBK ABBI FHB YKBJ HB LNXBR NWYEF MXYO RVCKQ. FHB RNXA JCRB YM FHB MYXLB CJ N INFHPNV FY ONKV NWCZCFCBJ JYOB LYKJCRBX FY WB EKKNFEXNZ. HB WBLNOB JY IYPBXMEZ… FHB YKZV FHCKQ HB PNJ NMXNCR YM PNJ ZYJCKQ HCJ IYPBX, PHCLH BGBKFENZZV, YM LYEXJB, HB RCR. EKMYXFEKNFBZV, HB FNEQHF HCJ NIIXBKFCLB BGBXVFHCKQ HB AKBP, FHBK HCJ NIIXBKFCLB ACZZBR HCO CK HCJ JZBBI. CXYKCL. HB LYEZR JNGB YFHBXJ MXYO RBNFH, WEF KYF HCOJBZM."
 // Define state handles for selection of crypto mode
 #define STATE_CAESAR 1
@@ -19,7 +20,7 @@
 #define STATE_CRACK_SUBST 4
 
 
-// Global variables
+//constant global variables (the alphabet capitals) used later.
 const char alphabet[26]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 
 void swapInt(int *xp, int *yp) {
@@ -52,7 +53,7 @@ void substitution(void) {
 
 
   // Select encrypt/decrypt
-  printf("\nEnter:\n0:Encrypt\n1:Decrypt\n ");
+  printf("\nEnter Selection:\n            Encrypt: 0\n            Decrypt: 1\n ");
   scanf(" %d" ,&mode);
 
   if (mode == encrypt) {
@@ -110,7 +111,7 @@ void caesar(void){
   char encryptionKey[26];
 
   // Select encrypt/decrypt
-  printf("Enter:\n0:Encrypt\n1:Decrypt\n ");
+  printf("\nEnter Selection:\n            Encrypt: 0\n            Decrypt: 1\n ");
   scanf(" %d" ,&mode);
 
   if (mode == encrypt) {
