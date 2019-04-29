@@ -1,9 +1,34 @@
 //
-//  GENG1003 Assignment 1
+//  ENGG1003 Assignment 1
 //
 //
 //  Created by Tim McClymont
 //
+//A program written in C to perform various (basic) text cipher encryption/decryption and cracking
+//functions. Inputs and outputs for cipher text are in capitals. This program performs two separate
+//cipher types: Caesar cipher (or rotation cipher) and substitution cipher.
+//
+//In addition to encrypting and decrypting text with a known key:
+//This program also cracks rotation ciphers correctly using a dictionary file of 10,000 common english
+//words as a lookup table to confirm successful decryption before printing the result to the user.
+//
+//The substitution cipher cracking function is under test and currently implements english character
+//freqency analysis of the cipher text in order to attempt decryption with a list of most commonly
+//used english letters.
+//
+// Menu system:
+//      Caesar Cipher: 1
+//Substitution Cipher: 2
+//     Crack Rotation: 3
+// Crack Substitution: 4
+//User selectable by typing the desired item number and pressing <enter>
+//
+//Caesar and Substitution ciphers have the following additional menus:
+//Enter Selection:
+//            Encrypt: 0
+//            Decrypt: 1
+//This prompts the user to select a sub-function of the encryption method.
+
 
 #include<stdio.h>
 #include<string.h>
@@ -12,7 +37,10 @@
 #define DICTIONARY "dictionary.txt"
 
 //SUB1 is the first canned substition text from blackboard. It is defined here as SUB1 for easy use later in the substition cracker function
-#define SUB1 "RCR VYE BGBX HBNX FHB FXNQBRV YM RNXFH IZNQEBCJ FHB PCJB? C FHYEQHF KYF. CF'J KYF N JFYXV FHB DBRC PYEZR FBZZ VYE. CF'J N JCFH ZBQBKR. RNXFH IZNQEBCJ PNJ N RNXA ZYXR YM FHB JCFH, JY IYPBXMEZ NKR JY PCJB HB LYEZR EJB FHB MYXLB FY CKMZEBKLB FHB OCRCLHZYXCNKJ FY LXBNFB ZCMB… HB HNR JELH N AKYPZBRQB YM FHB RNXA JCRB FHNF HB LYEZR BGBK ABBI FHB YKBJ HB LNXBR NWYEF MXYO RVCKQ. FHB RNXA JCRB YM FHB MYXLB CJ N INFHPNV FY ONKV NWCZCFCBJ JYOB LYKJCRBX FY WB EKKNFEXNZ. HB WBLNOB JY IYPBXMEZ… FHB YKZV FHCKQ HB PNJ NMXNCR YM PNJ ZYJCKQ HCJ IYPBX, PHCLH BGBKFENZZV, YM LYEXJB, HB RCR. EKMYXFEKNFBZV, HB FNEQHF HCJ NIIXBKFCLB BGBXVFHCKQ HB AKBP, FHBK HCJ NIIXBKFCLB ACZZBR HCO CK HCJ JZBBI. CXYKCL. HB LYEZR JNGB YFHBXJ MXYO RBNFH, WEF KYF HCOJBZM."
+#define SUB1 "RCR VYE BGBX HBNX FHB FXNQBRV YM RNXFH IZNQEBCJ FHB PCJB? C FHYEQHF KYF. CF'J KYF N JFYXV FHB DBRC PYEZR FBZZ VYE. CF'J N JCFH ZBQBKR. RNXFH IZNQEBCJ PNJ N RNXA ZYXR YM FHB JCFH, JY IYPBXMEZ NKR JY PCJB HB LYEZR EJB FHB MYXLB FY CKMZEBKLB FHB OCRCLHZYXCNKJ FY LXBNFB ZCMB… HB HNR JELH N AKYPZBRQB YM FHB RNXA JCRB FHNF HB LYEZR BGBK ABBI FHB YKBJ HB LNXBR NWYEF MXYO RVCKQ. FHB RNXA JCRB YM FHB MYXLB CJ N INFHPNV FY ONKV NWCZCFCBJ JYOB LYKJCRBX FY WB EKKNFEXNZ. HB WBLNOB JY IYPBXMEZ… FHB YKZV FHCKQ HB PNJ NMXNCR YM PNJ ZYJCKQ HCJ IYPBX, PHCLH BGBKFENZZV, YM LYEXJB, HB RCR. EKMYXFEKNFBZV, HB FNEQHF HCJ NIIXBKFCLB BGBXVFHCKQ HB AKBP, FHBK HCJ NIIXBKFCLB ACZZBR HCO CK HCJ JZBBI. CXYKCL. HB LYEZR JNGB YFHBXJ MXYO RBNFH, WEF KYF HCOJBZM"
+//second canned substitution text 2 for testing
+#define SUB2 "N KBP JLCBKFCMCL FXEFH RYBJ KYF FXCEOIH WV LYKGCKLCKQ CFJ YIIYKBKFJ NKR ONACKQ FHBO JBB FHB ZCQHF, WEF XNFHBX WBLNEJB CFJ YIIYKBKFJ BGBKFENZZV RCB, NKR N KBP QBKBXNFCYK QXYPJ EI FHNF CJ MNOCZCNX PCFH CF. - ONU IZNKLA."
+
 // Define state handles for selection of crypto mode
 #define STATE_CAESAR 1
 #define STATE_SUBST 2
@@ -20,88 +48,26 @@
 #define STATE_CRACK_SUBST 4
 
 
-//constant global variables (the alphabet capitals) used later.
+//constant global variables (the alphabet in capitals) used in the substitution cipher function.
 const char alphabet[26]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 
-void swapInt(int *xp, int *yp) {
-  int temp = *xp;
-  *xp = *yp;
-  *yp = temp;
-}
-void swapChar(char *xp, char *yp) {
-  char temp = *xp;
-  *xp = *yp;
-  *yp = temp;
+void swapInt(int *xp, int *yp) { // This function swaps integer values pointed by xp and yp its used in the substitution crack function only
+  int temp = *xp;//initialise char temp to *xp holding its value for use later
+  *xp = *yp; //now set *xp to *yp
+  *yp = temp; //finally set *yp to the value stored in 'temp' which was originally *xp
 }
 
-int strcicmp(char const *a, char const *b) {
-  // String compare that ignores case
-  for (;; a++, b++) {
-    int d = tolower((unsigned char)*a) - tolower((unsigned char)*b);
-    if (d != 0 || !*a)
-    return d;
-  }
+void swapChar(char *xp, char *yp) { // This function swaps char values pointed by xp and yp as above
+  char temp = *xp; //initialise char temp to *xp holding its value for use later
+  *xp = *yp; //now set *xp to *yp
+  *yp = temp; //finally set *yp to the value stored in 'temp' which was originally *xp
 }
 
-void substitution(void) {
-  const int encrypt = 0;
-  const int decrypt = 1;
-  int mode;
-
-  char text[1024], character;
-  char encryptionKey[26];
-
-
-  // Select encrypt/decrypt
-  printf("\nEnter Selection:\n            Encrypt: 0\n            Decrypt: 1\n ");
-  scanf(" %d" ,&mode);
-
-  if (mode == encrypt) {
-    // Encryption Code
-
-    printf("Enter plaintext message: ");
-    scanf(" %[^\n]s" ,text);
-    printf("Enter 26 character encryption key: ");
-    scanf(" %s", encryptionKey);
-
-    // Loop through plaintext message
-    for(int i=0; i<strlen(text); i++){
-      // Finding what letters
-      for(int j=0; j<26; j++){
-        if(text[i] == alphabet[j] ){
-          //Replace letter with matching encryption key character
-          text[i] = encryptionKey[j];
-          break;
-        }
-      }
-    }
-    printf("Encrypted text: \n%s\n", text);
-
-  } else if (mode == decrypt){
-    // Decryption Code
-    printf("Enter encrypted message: ");
-    scanf(" %[^\n]s" ,text);
-    printf("Enter 26 character encryption key: ");
-    scanf(" %s", encryptionKey);
-
-    // Loop through encrypted message
-    for(int i=0; i<strlen(text); i++){
-      // Finding what letter
-      for(int j=0; j<26; j++){
-        if(text[i] == encryptionKey[j] ){
-          //Replace letter with matching alphabet character
-          text[i] = alphabet[j];
-          break;
-        }
-      }
-    }
-    printf("Decrypted text: \n%s\n", text);
-
-  } else {
-    printf("Invalid selection\n");
-  }
-}
-
+//– What are the inputs? - User plaintext capitals only (lowercase passed through) and encryption key
+//– What is the return value? - void
+//– What does the function do? - Caesar cipher encryption/decryption function which takes user input in the form of plaintext
+//and converts it to encrypted text and vice versa given a numerical encryption key (0-26) from the user
+//– Are there limitations to the function? - Strings of less than 1024 character length and only upper case characters.
 void caesar(void){
   const int encrypt = 0; //declare two constant variables encrypt (0) and decrypt (1) these are usec for function selection in the menu system
   const int decrypt = 1;
@@ -168,6 +134,75 @@ void caesar(void){
   }
 }
 
+//– What are the inputs? - User plaintext capitals only (lowercase passed through) and encryption key
+//– What is the return value? - void
+//– What does the function do? - Caesar cipher encryption/decryption function which takes user input in the form of plaintext
+//and converts it to encrypted text and vice versa given an alphabetical encryption key from the user
+//– Are there limitations to the function? - Strings of less than 1024 character length and only upper case characters.
+void substitution(void) {
+  const int encrypt = 0; //declare two constant variables encrypt (0) and decrypt (1) these are usec for function selection in the menu system
+  const int decrypt = 1;
+  int mode;
+
+  char text[1024], character;
+  char encryptionKey[26];
+
+
+  // Select encrypt/decrypt
+  printf("\nEnter Selection:\n            Encrypt: 0\n            Decrypt: 1\n "); //menu with formatting for selection of encryption function mode
+  scanf(" %d" ,&mode); //store user integer value for mode selection
+
+  if (mode == encrypt) { //if user selected mode = constant variable encrypt (0) perform this function
+
+    printf("Enter plaintext message: "); //prompt the user to enter the plaintext message to be encrypted
+    scanf(" %[^\n]s" ,text); //store this text on char variable 'text'
+    printf("Enter 26 character encryption key: "); //prompt the user to enter the encryption key
+    scanf(" %s", encryptionKey); //store the encryption key on char variable 'encryptionKey'
+
+    // Loop through plaintext message
+    for(int i=0; i<strlen(text); i++){ //loops using the function strlen (string length) which is the number of characters in variable 'text'
+      for(int j=0; j<26; j++){ //for the length of characters in the alphabet (26) continue to loop so long as j !<26
+        if(text[i] == alphabet[j] ){
+          //Replace letter with its corresponding encryption key character of index j
+          text[i] = encryptionKey[j];
+          break;
+        }
+      }
+    }
+    printf("Encrypted text: \n%s\n", text); //print the encrypted text to the console for the user
+
+  } else if (mode == decrypt){ //if user selected mode = constant variable decrypt (1) perform this function
+    // Decryption Code
+    printf("Enter encrypted message: ");
+    scanf(" %[^\n]s" ,text);
+    printf("Enter 26 character encryption key: ");
+    scanf(" %s", encryptionKey);
+
+    // Loop through encrypted message
+    for(int i=0; i<strlen(text); i++){
+      // Finding what letter
+      for(int j=0; j<26; j++){
+        if(text[i] == encryptionKey[j] ){
+          //Replace letter with matching alphabet character
+          text[i] = alphabet[j]; //constant global variable 'alphabet' is used here, so each letter of encrypted text indexed correclty with the encryption key gets replaced with its corresponding j'th alphabet character
+          break;
+        }
+      }
+    }
+    printf("Decrypted text: \n%s\n", text); //print the newly decrypted text to the console for the user
+
+  } else {
+    printf("Invalid selection\n"); //notify the user that an incorrect substitution cipher mode has been entered
+  }
+}
+
+//– What are the inputs? - User plaintext capitals only (lowercase passed through) only
+//– What is the return value? - void
+//– What does the function do? - Substitution decryption function which takes user input in the form of encrypted Text
+//and converts it to plaintext based on a frequency analysis of most commonly used english characters distribution using and requires the use of
+//two functions swapInt and swapChar to index two arrays of arranged letters.
+//– Are there limitations to the function? - Strings of less than 2048 character length and only upper case characters.
+// This function is also under test and therfore not fully functional, it uses defined fixed variable SUB1 and has printF input commented out.
 void crackSubstitution(void){
   int freqs[26]; // Frequencies of occurance
   for (int i=0; i < 26; i++) {freqs[i] = 0;} // Initialise array of zeros
@@ -183,10 +218,10 @@ void crackSubstitution(void){
 
   // Step through every letter in the text
   for (int i = 0; i < len; i++) {
-    if(text[i] >= 'A' && text[i] <= 'Z'){ // Is it a letter?
+    if(text[i] >= 'A' && text[i] <= 'Z'){ // Is it a letter between A-Z?
       //Has letter been seen before?
       for (int j = 0; j < 26; j++) {
-        if(text[i] == seen[j]) {
+        if(text[i] == seen[j]) { //test this character as to whether its been seen before
           freqs[j]++;
           break;
         } else {  // If never seen, accumulate and add an occurance
@@ -215,7 +250,7 @@ void crackSubstitution(void){
   }
 
   // Assume ideal freq. distribution of english letters
-  const char letterDistIdeal[26] = {'E','T','A','O','I','N','S','R','D','H','L','U','C','M','W','F','Y','G','P','B','V','K','X','Q','J','Z'};
+  const char letterDistIdeal[26] = {'E','T','A','O','I','N','S','H','R','D','L','C','U','M','W','F','G','Y','P','B','V','K','J','X','Q','Z'};
   // Now perform substitution decryption exactly the same as the substitution decryption function detailed above
   // Loop through encrypted message
   for(int i=0; i<strlen(text); i++){ //for loop to loop through the entire encrypted message character by character and replace each with the corresponding ideal freq letter
@@ -233,6 +268,14 @@ void crackSubstitution(void){
 
 }
 
+int strcicmp(char const *a, char const *b) {
+  // String compare that ignores case of the characters
+  for (;; a++, b++) {
+    int d = tolower((unsigned char)*a) - tolower((unsigned char)*b); //tolower requires ctype.h library
+    if (d != 0 || !*a)
+    return d;
+  }
+}
 
 int dictionaryLookup(char *word){ // Return 0 if argument string is found in a dictionary file, else return 1
 
@@ -254,6 +297,11 @@ fclose(dictFile); //closes dictFile
 return 1; // No match found
 }
 
+//– What are the inputs? - User plaintext capitals only (lowercase passed through) only
+//– What is the return value? - void
+//– What does the function do? - Caesar cipher decryption function which takes user input in the form of encrypted Text
+//and converts it to plaintext based on a dictionary lookup function of file: dictionary.txt using function dictionaryLookup
+//– Are there limitations to the function? - Strings of less than 2048 character length and only upper case characters.
 void crackRotation(void) {
 
   char text[2048] = {0};
