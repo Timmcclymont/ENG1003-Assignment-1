@@ -11,6 +11,7 @@
 // File Paths
 #define DICTIONARY "dictionary.txt"
 
+#define SUB1 "RCR VYE BGBX HBNX FHB FXNQBRV YM RNXFH IZNQEBCJ FHB PCJB? C FHYEQHF KYF. CF'J KYF N JFYXV FHB DBRC PYEZR FBZZ VYE. CF'J N JCFH ZBQBKR. RNXFH IZNQEBCJ PNJ N RNXA ZYXR YM FHB JCFH, JY IYPBXMEZ NKR JY PCJB HB LYEZR EJB FHB MYXLB FY CKMZEBKLB FHB OCRCLHZYXCNKJ FY LXBNFB ZCMB… HB HNR JELH N AKYPZBRQB YM FHB RNXA JCRB FHNF HB LYEZR BGBK ABBI FHB YKBJ HB LNXBR NWYEF MXYO RVCKQ. FHB RNXA JCRB YM FHB MYXLB CJ N INFHPNV FY ONKV NWCZCFCBJ JYOB LYKJCRBX FY WB EKKNFEXNZ. HB WBLNOB JY IYPBXMEZ… FHB YKZV FHCKQ HB PNJ NMXNCR YM PNJ ZYJCKQ HCJ IYPBX, PHCLH BGBKFENZZV, YM LYEXJB, HB RCR. EKMYXFEKNFBZV, HB FNEQHF HCJ NIIXBKFCLB BGBXVFHCKQ HB AKBP, FHBK HCJ NIIXBKFCLB ACZZBR HCO CK HCJ JZBBI. CXYKCL. HB LYEZR JNGB YFHBXJ MXYO RBNFH, WEF KYF HCOJBZM."
 // Define state handles for selection of crypto mode
 #define STATE_CAESAR 1
 #define STATE_SUBST 2
@@ -173,12 +174,12 @@ void crackSubstitution(void){
   int freqs[26]; // Frequencies of occurance
   for (int i=0; i < 26; i++) {freqs[i] = 0;} // Initialise array of zeros
   char seen[26];
-  char text[2048];
+  char text[2048] = SUB1;
   int lenSeen = 0;
   int len = strlen(text);
 
-  printf("Enter cipher to crack: "); //Prompt the user for cipher text input
-  scanf(" %[^\n]s" , text);   //store the users cipher text input on char variable 'text'
+  // printf("Enter cipher to crack: "); //Prompt the user for cipher text input
+  // scanf(" %[^\n]s" , text);   //store the users cipher text input on char variable 'text'
 
   // Step through encrypted text and accumulate unlabelled frequencies
 
@@ -260,7 +261,9 @@ int dictionaryLookup(char *word){
 
 void crackRotation(void) {
 
-  char text[2048], decipherText[2048], character;
+  char text[2048] = {0};
+  char decipherText[2048] = {0};
+  char character;
   int scores[26];
   for(int i = 0; i < 26; i++) { //sets each array value to 0
     scores[i]=0;
