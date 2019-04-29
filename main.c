@@ -105,69 +105,66 @@ void substitution(void) {
 void caesar(void){
   const int encrypt = 0; //declare two constant variables encrypt (0) and decrypt (1) these are usec for function selection in the menu system
   const int decrypt = 1;
-  int mode; //declare a single integer mode for the storage of user input for menu selection
-
-  //char text[1024], character; //two char variables 'character' and 'text' of length 1024 (arbitrary array length for storage of user encrypt/decrypt text)
-  //char encryptionKey[26]; //encryption key array of length 26 for
+  int mode; //declare a single integer 'mode' for the storage of user input for menu selection
 
   // Select encrypt/decrypt
-  printf("\nEnter Selection:\n            Encrypt: 0\n            Decrypt: 1\n ");
-  scanf(" %d" ,&mode);
+  printf("\nEnter Selection:\n            Encrypt: 0\n            Decrypt: 1\n "); //menu with formatting for selection of encryption function mode
+  scanf(" %d" ,&mode); //store user integer value for mode selection
 
-  if (mode == encrypt) {
-    char text[1024], character;
-    int encryptionKey;
+  if (mode == encrypt) { //if user selected mode = constant variable encrypt (0) perform this function
+    char text[1024], character; //char declaration, function is limited to a maximum input text length of 1024 chracters
+    int encryptionKey; //integer declaration for the user inputted encryption key 0-26
 
-    printf("Enter plaintext message: ");
-    scanf(" %[^\n]s" ,text);
-    printf("Enter encryption key: ");
-    scanf(" %d", &encryptionKey);
+    printf("Enter plaintext message: "); //promt the user to enter the plaintext message to be encrypted
+    scanf(" %[^\n]s" ,text); //store this text on char variable 'text'
+    printf("Enter encryption key: "); //prompt the user to enter the encryption key
+    scanf(" %d", &encryptionKey); //store the encryption key on int variable 'encryptionKey'
 
 
-    for(int i = 0; text[i] != '\0'; i++){
-      character = text[i];
+    for(int i = 0; text[i] != '\0'; i++){ //for loop to step through each character in array text[i] as long as text does not equal a null character (stored at end of array)
+      character = text[i]; //set character to the i'th letter in the text array
 
-      if(character >= 'A' && character <= 'Z'){
-        character = character + encryptionKey;
+      if(character >= 'A' && character <= 'Z'){ //test the character is in the range of A - Z
+        character = character + encryptionKey; //if the character is in the range increment it by the value of encryption key
 
         if(character > 'Z'){
-          character = character - 'Z' + 'A' - 1;
+          character = character - 'Z' + 'A' - 1; //deals with lowercase out of range characters and special ASCII characters
         }
 
-        text[i] = character;
+        text[i] = character; //set the text at i'th index position to the now encrypted character
       }
     }
 
     printf("Encrypted message: %s \n", text);
 
   }
-  else if(mode == decrypt) {
+  else if(mode == decrypt) { //if user selected mode = constant variable decrypt (1) perform this function
     char text[1024], character;
     int i, encryptionKey;
-
+    //variable declarations are as per the encryption function above nothing new here
     printf("Enter encrypted message: ");
     scanf(" %[^\n]s" ,text);
     printf("Enter encryption key: ");
     scanf(" %d", &encryptionKey);
-
+    //Decryption function is exactly the same however instead of adding the encryption key, it subtracts the key
     for(i = 0; text[i] != '\0'; i++){
       character = text[i];
 
       if(character >= 'A' && character <= 'Z'){
-        character = character - encryptionKey;
+        character = character - encryptionKey; //subtraction of the encryption key rather than addition like the encrypt function
 
         if(character < 'A'){
-          character = character + 'Z' - 'A' + 1;
+          character = character + 'Z' - 'A' + 1; //inverse of the encrypt function to deal with lowercase letters being turned into special characters
         }
 
         text[i] = character;
       }
     }
 
-    printf("Decrypted message: %s \n", text);
+    printf("Decrypted message: %s \n", text); //print the decrypted message to the terminal
 
   } else {
-    printf("Invalid selection\n");
+    printf("Invalid selection\n"); //if the user enters a value that != 1 or 0 then this error is displayed.
   }
 }
 
@@ -249,12 +246,12 @@ int dictionaryLookup(char *word){ // Return 0 if argument string is found in a d
     //if decrypted word matches a word in the dictionary, increment that key's score
     if (strcasecmp(word,dictWord) == 0) { // strcasecmp (UNIX systems) ignores case this is not a portable libray so will likely return errors on other OS'
 
-      fclose(dictFile); //closes dictFile
-      return 0; // match found
-    }
+    fclose(dictFile); //closes dictFile
+    return 0; // match found
   }
-  fclose(dictFile); //closes dictFile
-  return 1; // No match found
+}
+fclose(dictFile); //closes dictFile
+return 1; // No match found
 }
 
 void crackRotation(void) {
